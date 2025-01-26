@@ -8,13 +8,15 @@
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "database": "docker compose --file infra/compose.yaml up --detach"
+    "test:watch": "jest --watchAll",
+    "database": "docker compose --file infra/compose.yaml --env-file .env up --detach",
+    "database:down": "docker compose --file infra/compose.yaml --env-file .env down"
   },
   "author": "Maycon",
   "license": "MIT",
   "dependencies": {
     "next": "^15.1.6",
+    "pg": "^8.11.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

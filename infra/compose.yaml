@@ -2,6 +2,8 @@ services:
   database:
     image: "postgres:16.0-alpine3.18"
     environment:
-      POSTGRES_PASSWORD: "123"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
