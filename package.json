@@ -9,8 +9,8 @@
     "lint:fix": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "database": "docker compose --file infra/compose.yaml --env-file .env up --detach",
-    "database:down": "docker compose --file infra/compose.yaml --env-file .env down"
+    "database": "docker compose --file infra/compose.yaml --env-file .env.development up --detach",
+    "database:down": "docker compose --file infra/compose.yaml --env-file .env.development down"
   },
   "author": "Maycon",
   "license": "MIT",
