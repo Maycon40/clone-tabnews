@@ -4,12 +4,14 @@
   "description": "Implementação do https://www.tabnews.com.br para o https://curso.dev",
   "main": "index.js",
   "scripts": {
+    "server": "npm run database:up && next dev",
     "dev": "next dev",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "database": "docker compose --file infra/compose.yaml --env-file .env.development up --detach",
+    "database:up": "docker compose --file infra/compose.yaml --env-file .env.development up --detach",
+    "database:stop": "docker compose --file infra/compose.yaml --env-file .env.development stop",
     "database:down": "docker compose --file infra/compose.yaml --env-file .env.development down"
   },
   "author": "Maycon",
