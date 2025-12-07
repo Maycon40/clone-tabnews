@@ -6,8 +6,8 @@
   "scripts": {
     "server": "npm run database:up && next dev",
     "dev": "next dev",
-    "test": "jest",
-    "test:watch": "jest --watchAll",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watchAll --runInBand",
     "database:up": "docker compose --file infra/compose.yaml --env-file .env.development up --detach",
     "database:stop": "docker compose --file infra/compose.yaml --env-file .env.development stop",
     "database:down": "docker compose --file infra/compose.yaml --env-file .env.development down",
@@ -20,7 +20,7 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.4.4",
-    "next": "^15.1.6",
+    "next": "^16.0.7",
     "node-pg-migrate": "^6.2.2",
     "pg": "^8.11.3",
     "react": "^18.2.0",
