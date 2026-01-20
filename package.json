@@ -4,8 +4,7 @@
   "description": "Implementação do https://www.tabnews.com.br para o https://curso.dev",
   "main": "index.js",
   "scripts": {
-    "server": "npm run database:up && next dev",
-    "dev": "next dev",
+    "dev": "npm run database:up && npm run wait-for-postgres && npm run migration:up && next dev",
     "test": "jest --runInBand",
     "test:watch": "jest --watchAll --runInBand",
     "database:up": "docker compose --file infra/compose.yaml --env-file .env.development up --detach",
@@ -14,7 +13,8 @@
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
     "migration:create": "node-pg-migrate --migrations-dir infra/migrations create",
-    "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up"
+    "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up",
+    "wait-for-postgres": "node infra/scripts/wait-for-postgres.js"
   },
   "author": "Maycon",
   "license": "MIT",
