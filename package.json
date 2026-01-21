@@ -10,8 +10,8 @@
     "database:up": "docker compose --file infra/compose.yaml --env-file .env.development up --detach",
     "database:stop": "docker compose --file infra/compose.yaml --env-file .env.development stop",
     "database:down": "docker compose --file infra/compose.yaml --env-file .env.development down",
-    "lint:check": "prettier --check .",
-    "lint:fix": "prettier --write .",
+    "lint:prettier:check": "prettier --check .",
+    "lint:prettier:fix": "prettier --write .",
     "migration:create": "node-pg-migrate --migrations-dir infra/migrations create",
     "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up",
     "wait-for-postgres": "node infra/scripts/wait-for-postgres.js"
