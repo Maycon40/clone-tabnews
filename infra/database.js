@@ -32,10 +32,12 @@ async function getNewClient() {
   return client;
 }
 
-export default {
+const database = {
   getNewClient,
   query,
 };
+
+export default database;
 
 function getValueSSL() {
   if (process.env.POSTGRES_CA) {
