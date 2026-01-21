@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "npm run database:up && npm run wait-for-postgres && npm run migration:up && next dev",
-    "test": "npm run database:up && npm run wait-for-postgres && concurrently -n next,jest --hide next -k -s command-jest 'next dev' 'jest --runInBand'",
-    "test:watch": "jest --watchAll --runInBand",
+    "test": "npm run database:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand\"",
+    "test:watch": "npm run database:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --watchAll --runInBand\"",
     "database:up": "docker compose --file infra/compose.yaml --env-file .env.development up --detach",
     "database:stop": "docker compose --file infra/compose.yaml --env-file .env.development stop",
     "database:down": "docker compose --file infra/compose.yaml --env-file .env.development down",
