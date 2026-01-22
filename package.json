@@ -10,12 +10,15 @@
     "database:up": "docker compose --file infra/compose.yaml --env-file .env.development up --detach",
     "database:stop": "docker compose --file infra/compose.yaml --env-file .env.development stop",
     "database:down": "docker compose --file infra/compose.yaml --env-file .env.development down",
+    "lint:check": "npm run lint:eslint:check && npm run lint:prettier:check",
     "lint:eslint:check": "next lint --dir .",
     "lint:prettier:check": "prettier --check .",
     "lint:prettier:fix": "prettier --write .",
     "migration:create": "node-pg-migrate --migrations-dir infra/migrations create",
     "migration:up": "node-pg-migrate -m infra/migrations --envPath .env.development up",
-    "wait-for-postgres": "node infra/scripts/wait-for-postgres.js"
+    "wait-for-postgres": "node infra/scripts/wait-for-postgres.js",
+    "prepare": "husky",
+    "commit": "cz"
   },
   "author": "Maycon",
   "license": "MIT",
@@ -32,12 +35,20 @@
   "devDependencies": {
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
+    "commitizen": "^4.3.1",
     "concurrently": "^8.2.2",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest": "^28.6.0",
+    "husky": "^9.1.7",
     "jest": "^29.6.2",
     "prettier": "^3.4.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
