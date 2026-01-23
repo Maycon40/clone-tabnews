@@ -1,0 +1,16 @@
+name: Security
+
+on: pull_request
+
+jobs:
+  audit:
+    name: Audit Vulnerability
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/krypton"
+
+      - run: npm audit --omit=dev --audit-level=high
