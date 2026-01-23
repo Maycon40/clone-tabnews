@@ -11,7 +11,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "lts/hydrogen"
+          node-version: "lts/krypton"
 
       - run: npm ci
 
@@ -29,7 +29,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "lts/hydrogen"
+          node-version: "lts/krypton"
 
       - run: npm ci
 
