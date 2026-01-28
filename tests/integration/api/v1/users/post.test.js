@@ -16,8 +16,8 @@ describe("POST /api/v1/users", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: "maycon",
-          email: "mayconteste@gmail.com",
+          username: "teste",
+          email: "teste@gmail.com",
           password: "senha123",
         }),
       });
@@ -29,8 +29,8 @@ describe("POST /api/v1/users", () => {
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
-      expect(responseBody.username).toBe("maycon");
-      expect(responseBody.email).toBe("mayconteste@gmail.com");
+      expect(responseBody.username).toBe("teste");
+      expect(responseBody.email).toBe("teste@gmail.com");
       expect(responseBody.password).toBe("senha123");
     });
 
