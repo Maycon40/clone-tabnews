@@ -10,22 +10,10 @@ beforeAll(async () => {
 describe("GET /api/v1/users/[username]", () => {
   describe("Anonymous user", () => {
     test("With exact case match", async () => {
-      const response1 = await fetch("http://localhost:3000/api/v1/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "samecase",
-          email: "samecase@gmail.com",
-          password: "senha123",
-        }),
-      });
-
-      expect(response1.status).toBe(201);
+      const createdUser = await orchestrator.createUser();
 
       const response2 = await fetch(
-        "http://localhost:3000/api/v1/users/samecase",
+        `http://localhost:3000/api/v1/users/${createdUser.username}`,
       );
 
       expect(response2.status).toBe(200);
@@ -35,24 +23,14 @@ describe("GET /api/v1/users/[username]", () => {
       expect(uuidVersion(response2Body.id)).toBe(4);
       expect(Date.parse(response2Body.created_at)).not.toBeNaN();
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
-      expect(response2Body.username).toBe("samecase");
-      expect(response2Body.email).toBe("samecase@gmail.com");
+      expect(response2Body.username).toBe(createdUser.username);
+      expect(response2Body.email).toBe(createdUser.email);
     });
 
     test("With case mismatch", async () => {
-      const response1 = await fetch("http://localhost:3000/api/v1/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "differentcase",
-          email: "differentcase@gmail.com",
-          password: "senha123",
-        }),
+      const createdUser = await orchestrator.createUser({
+        username: "differentcase",
       });
-
-      expect(response1.status).toBe(201);
 
       const response2 = await fetch(
         "http://localhost:3000/api/v1/users/Differentcase",
@@ -66,7 +44,7 @@ describe("GET /api/v1/users/[username]", () => {
       expect(Date.parse(response2Body.created_at)).not.toBeNaN();
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
       expect(response2Body.username).toBe("differentcase");
-      expect(response2Body.email).toBe("differentcase@gmail.com");
+      expect(response2Body.email).toBe(createdUser.email);
     });
 
     test("With nonexistance username", async () => {

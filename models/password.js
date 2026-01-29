@@ -10,7 +10,7 @@ async function hash(password) {
 function getNumberOfRounds() {
   let rounds = 14;
 
-  if (process.env.NODE_ENV == "development") {
+  if (["test", "development"].includes(process.env.NODE_ENV)) {
     rounds = 1;
   }
 
