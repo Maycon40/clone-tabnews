@@ -1,5 +1,8 @@
-import orchestrator from "tests/orchestrator";
 import { version as uuidVersion } from "uuid";
+
+import orchestrator from "tests/orchestrator";
+import user from "models/user";
+import password from "models/password";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -31,7 +34,19 @@ describe("POST /api/v1/users", () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
       expect(responseBody.username).toBe("teste");
       expect(responseBody.email).toBe("teste@gmail.com");
-      expect(responseBody.password).toBe("senha123");
+
+      const userInDatabase = await user.findOneByUsername("teste");
+      const correctPasswordMatch = await password.compare(
+        "senha123",
+        userInDatabase.password,
+      );
+      const incorrectPasswordMatch = await password.compare(
+        "senhA123",
+        userInDatabase.password,
+      );
+
+      expect(correctPasswordMatch).toBe(true);
+      expect(incorrectPasswordMatch).toBe(false);
     });
 
     test("With duplicated 'email'", async () => {
@@ -68,7 +83,7 @@ describe("POST /api/v1/users", () => {
       expect(response2Body).toEqual({
         name: "ValidationError",
         message: "O email já está sendo utilizado.",
-        action: "Utilize outro email para realizar o cadastro.",
+        action: "Utilize outro email.",
         status_code: 400,
       });
     });
@@ -107,7 +122,7 @@ describe("POST /api/v1/users", () => {
       expect(response2Body).toEqual({
         name: "ValidationError",
         message: "O nome de usuário já está sendo utilizado.",
-        action: "Utilize outro nome de usuário para realizar o cadastro.",
+        action: "Utilize outro nome de usuário.",
         status_code: 400,
       });
     });

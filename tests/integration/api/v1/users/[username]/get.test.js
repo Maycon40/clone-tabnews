@@ -37,7 +37,6 @@ describe("GET /api/v1/users/[username]", () => {
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
       expect(response2Body.username).toBe("samecase");
       expect(response2Body.email).toBe("samecase@gmail.com");
-      expect(response2Body.password).toBe("senha123");
     });
 
     test("With case mismatch", async () => {
@@ -68,7 +67,6 @@ describe("GET /api/v1/users/[username]", () => {
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
       expect(response2Body.username).toBe("differentcase");
       expect(response2Body.email).toBe("differentcase@gmail.com");
-      expect(response2Body.password).toBe("senha123");
     });
 
     test("With nonexistance username", async () => {
