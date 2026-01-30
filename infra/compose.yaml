@@ -1,10 +1,15 @@
 services:
-  database:
-    container_name: "postgres-dev"
+  postgres:
+    container_name: "postgres"
     image: "postgres:16.0-alpine3.18"
-    environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    env_file:
+      - ../.env.development
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
+
+  app:
+    container_name: "app"
+    build:
+      context: ../.
+    ports:
+      - 3000:3000
