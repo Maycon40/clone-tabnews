@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
 
 dotenv.config({
-  path: ".env.development",
+  path: process.env.WATCH === "true" ? ".env.development" : ".env.test",
 });
 
 const nextJest = require("next/jest");
