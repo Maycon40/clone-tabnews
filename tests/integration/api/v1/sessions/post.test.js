@@ -32,8 +32,6 @@ describe("POST /api/v1/sessions", () => {
 
       const responseBody = await response.json();
 
-      console.log("responseBody", responseBody);
-
       expect(responseBody.user_id).toEqual(createdUser.id);
 
       expect(uuidVersion(responseBody.id)).toBe(4);

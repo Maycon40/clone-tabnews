@@ -24,8 +24,6 @@ function UpdatedAt() {
     refreshInterval: 2000,
   });
 
-  console.log(data);
-
   let updatedAtText = "Carregando...";
 
   if (!isLoading && data) {
@@ -39,8 +37,6 @@ function DatabaseStatus() {
   const { isLoading, data } = useSWR("/api/v1/status", fetchAPI, {
     refreshInterval: 2000,
   });
-
-  console.log(data);
 
   let maxConnectionsText = "";
   let usedConnectionsText = "";
