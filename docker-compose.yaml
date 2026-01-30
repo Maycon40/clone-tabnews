@@ -3,13 +3,15 @@ services:
     container_name: "postgres"
     image: "postgres:16.0-alpine3.18"
     env_file:
-      - ../.env.development
+      - .env.development
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
 
   app:
-    container_name: "app"
-    build:
-      context: ../.
+    image: node:24.13
+    working_dir: /home/node/app
+    volumes:
+      - .:/home/node/app
+    command: tail -f /dev/null
     ports:
-      - 3000:3000
+      - "3000:3000"
