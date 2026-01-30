@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "npm run services:wait:database && npm run migrations:up && (trap 'npm run services:stop' EXIT INT TERM ; next dev)",
-    "test": "concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand\"",
+    "test": "npm run services:up && concurrently -n next,jest --hide next -k -s command-jest \"POSTGRES_HOST=localhost next dev\" \"jest --runInBand\"",
     "posttest": "npm run services:stop",
     "test:watch": "jest --watchAll --runInBand --verbose",
     "services:up": "docker compose --file infra/compose.yaml --env-file .env.development up --detach",
