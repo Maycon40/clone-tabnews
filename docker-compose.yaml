@@ -4,8 +4,6 @@ services:
     image: "postgres:16.0-alpine3.18"
     env_file:
       - .env.development
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
 
   app:
     image: node:24.13

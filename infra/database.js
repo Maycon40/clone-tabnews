@@ -24,7 +24,7 @@ async function query(queryObject) {
 
 async function getNewClient() {
   const config = {
-    host: process.env.POSTGRES_HOST,
+    host: process.env.TEST === "true" ? "localhost" : process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
