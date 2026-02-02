@@ -52,12 +52,12 @@ async function checkPostgres() {
     await sleep(1000);
     checkPostgres();
   }
-
-  console.log("\nPostgres está pronto e aceitando conexões\n");
   return;
 }
 
 (async () => {
   console.log("Aguardando Postgres aceitar conexões ");
   await checkPostgres();
+
+  console.log("\nPostgres está pronto e aceitando conexões\n");
 })();

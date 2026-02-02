@@ -4,13 +4,13 @@
   "description": "Implementação do https://www.tabnews.com.br para o https://curso.dev",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run services:wait:database && npm run migrations:up && (trap 'npm run services:stop' EXIT INT TERM ; next dev)",
-    "test": "npm run services:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand\"",
+    "dev": "npm run services:wait:database && npm run migrations:up && next dev",
+    "test": "npm run services:up && concurrently -n next,jest --hide next -k -s command-jest \"TEST=true next dev\" \"jest --runInBand\"",
     "posttest": "npm run services:stop",
     "test:watch": "WATCH=true jest --watchAll --runInBand --verbose",
-    "services:up": "docker compose --file infra/compose.yaml --env-file .env.development up --detach",
-    "services:stop": "docker compose --file infra/compose.yaml --env-file .env.development stop",
-    "services:down": "docker compose --file infra/compose.yaml --env-file .env.development down",
+    "services:up": "docker compose -f infra/compose-test.yaml --env-file .env.development up --detach",
+    "services:stop": "docker compose -f infra/compose-test.yaml --env-file .env.development stop",
+    "services:down": "docker compose -f infra/compose-test.yaml --env-file .env.development down",
     "services:wait:database": "node infra/scripts/wait-for-postgres.js",
     "migrations:up": "node-pg-migrate -m infra/migrations --envPath .env.development up",
     "migrations:create": "node-pg-migrate --migrations-dir infra/migrations create",
@@ -52,7 +52,8 @@
     "eslint-plugin-jest": "29.12.1",
     "husky": "9.1.7",
     "jest": "30.2.0",
-    "prettier": "3.8.1"
+    "prettier": "3.8.1",
+    "set-cookie-parser": "3.0.1"
   },
   "config": {
     "commitizen": {

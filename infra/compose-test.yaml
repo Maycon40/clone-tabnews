@@ -1,0 +1,8 @@
+services:
+  postgres-dev:
+    container_name: "postgres-dev"
+    image: "postgres:16.0-alpine3.18"
+    env_file:
+      - ../.env.test
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
