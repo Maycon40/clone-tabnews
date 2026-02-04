@@ -3,6 +3,7 @@ import { version as uuidVersion } from "uuid";
 import orchestrator from "tests/orchestrator";
 import password from "models/password";
 import user from "models/user";
+import activation from "models/activation";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -12,6 +13,8 @@ beforeAll(async () => {
 });
 
 describe("Use case: Registration Flow (all sucessful)", () => {
+  let createUserResponseBody;
+
   test("Create user account", async () => {
     const response = await fetch("http://localhost:3000/api/v1/users", {
       method: "POST",
@@ -27,21 +30,21 @@ describe("Use case: Registration Flow (all sucessful)", () => {
 
     expect(response.status).toBe(201);
 
-    const responseBody = await response.json();
+    createUserResponseBody = await response.json();
 
-    expect(responseBody).toEqual({
-      id: responseBody.id,
+    expect(createUserResponseBody).toEqual({
+      id: createUserResponseBody.id,
       username: "RegistrationFlow",
       email: "RegistrationFlow@gmail.com",
-      password: responseBody.password,
+      password: createUserResponseBody.password,
       features: ["read:activation_token"],
-      created_at: responseBody.created_at,
-      updated_at: responseBody.updated_at,
+      created_at: createUserResponseBody.created_at,
+      updated_at: createUserResponseBody.updated_at,
     });
 
-    expect(uuidVersion(responseBody.id)).toBe(4);
-    expect(Date.parse(responseBody.created_at)).not.toBeNaN();
-    expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+    expect(uuidVersion(createUserResponseBody.id)).toBe(4);
+    expect(Date.parse(createUserResponseBody.created_at)).not.toBeNaN();
+    expect(Date.parse(createUserResponseBody.updated_at)).not.toBeNaN();
 
     const userInDatabase = await user.findOneByUsername("RegistrationFlow");
     const correctPasswordMatch = await password.compare(
@@ -57,7 +60,26 @@ describe("Use case: Registration Flow (all sucessful)", () => {
     expect(incorrectPasswordMatch).toBe(false);
   });
 
-  test("Receive activation email", () => {});
+  test("Receive activation email", async () => {
+    const lastEmail = await orchestrator.getLastEmail();
+
+    const activationToken = await activation.findOneByUserId(
+      createUserResponseBody.id,
+    );
+
+    expect(lastEmail).toEqual({
+      id: 1,
+      sender: "<contato@gmail.com>",
+      recipients: ["<RegistrationFlow@gmail.com>"],
+      subject: "Ative o seu cadastro",
+      text: lastEmail.text,
+      size: lastEmail.size,
+      created_at: lastEmail.created_at,
+    });
+
+    expect(lastEmail.text).toContain("RegistrationFlow");
+    expect(lastEmail.text).toContain(activationToken.id);
+  });
 
   test("Active account", () => {});
 
