@@ -5,6 +5,13 @@ services:
     env_file:
       - .env.development
 
+  mailcatcher:
+    container_name: "mailcatcher"
+    image: "sj26/mailcatcher:v0.10.0"
+    ports:
+      - "1025:1025"
+      - "1080:1080"
+
   app:
     image: node:24.13
     working_dir: /home/node/app
