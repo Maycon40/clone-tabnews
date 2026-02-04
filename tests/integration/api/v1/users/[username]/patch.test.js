@@ -33,11 +33,19 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       const responseBody = await response.json();
 
+      expect(responseBody).toEqual({
+        id: responseBody.id,
+        username: "uniqueUser2",
+        email: createdUser.email,
+        password: responseBody.password,
+        features: [],
+        created_at: responseBody.created_at,
+        updated_at: responseBody.updated_at,
+      });
+
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
-      expect(responseBody.username).toBe("uniqueUser2");
-      expect(responseBody.email).toBe(createdUser.email);
 
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
     });
@@ -66,11 +74,19 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       const responseBody = await response.json();
 
+      expect(responseBody).toEqual({
+        id: responseBody.id,
+        username: "uniqueEmail",
+        email: "uniqueEmail2@gmail.com",
+        password: responseBody.password,
+        features: [],
+        created_at: responseBody.created_at,
+        updated_at: responseBody.updated_at,
+      });
+
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
-      expect(responseBody.username).toBe("uniqueEmail");
-      expect(responseBody.email).toBe("uniqueEmail2@gmail.com");
 
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
     });
@@ -99,11 +115,19 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       const responseBody = await response.json();
 
+      expect(responseBody).toEqual({
+        id: responseBody.id,
+        username: "newPassword",
+        email: "newPassword@gmail.com",
+        password: responseBody.password,
+        features: [],
+        created_at: responseBody.created_at,
+        updated_at: responseBody.updated_at,
+      });
+
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
-      expect(responseBody.username).toBe("newPassword");
-      expect(responseBody.email).toBe("newPassword@gmail.com");
 
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
 
