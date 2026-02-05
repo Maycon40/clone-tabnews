@@ -63,9 +63,9 @@ describe("Use case: Registration Flow (all sucessful)", () => {
   test("Receive activation email", async () => {
     const lastEmail = await orchestrator.getLastEmail();
 
-    const activationToken = await activation.findOneByUserId(
-      createUserResponseBody.id,
-    );
+    const activationId = orchestrator.extractUUID(lastEmail.text);
+
+    const activationToken = await activation.findOneValidById(activationId);
 
     expect(lastEmail).toEqual({
       id: 1,
@@ -78,7 +78,12 @@ describe("Use case: Registration Flow (all sucessful)", () => {
     });
 
     expect(lastEmail.text).toContain("RegistrationFlow");
-    expect(lastEmail.text).toContain(activationToken.id);
+    expect(lastEmail.text).toContain(
+      `http://localhost:3000/register/activate/${activationToken.id}`,
+    );
+
+    expect(createUserResponseBody.id).toBe(activationToken.user_id);
+    expect(activationToken.used_at).toBe(null);
   });
 
   test("Active account", () => {});
