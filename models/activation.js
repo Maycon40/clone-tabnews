@@ -1,6 +1,7 @@
 import database from "infra/database";
 import email from "infra/email";
 import { NotFoundError } from "infra/errors";
+import user from "models/user";
 
 const EXPIRATION_IN_MILLISECONDS = 15 * 60 * 1000; // 15 minutes
 
@@ -25,6 +26,39 @@ async function create(userId) {
     });
 
     return results.rows[0];
+  }
+}
+
+async function markTokenAsUsed(tokenId) {
+  const activatedToken = await runUpdateQuery(tokenId);
+  await activateUserByUserId(activatedToken.user_id);
+
+  return activatedToken;
+
+  async function runUpdateQuery(tokenId) {
+    const results = await database.query({
+      text: `
+        UPDATE
+          user_activation_tokens
+        SET
+          used_at = timezone('utc', now()),
+          updated_at = timezone('utc', now())
+        WHERE
+          id = $1
+        RETURNING
+          *
+        ;
+      `,
+      values: [tokenId],
+    });
+
+    return results.rows[0];
+  }
+
+  async function activateUserByUserId(userId) {
+    const activatedUser = await user.setFeatures(userId, ["create:session"]);
+
+    return activatedUser;
   }
 }
 
@@ -77,6 +111,7 @@ Equipe`,
 
 const activation = {
   create,
+  markTokenAsUsed,
   sendEmailToUser,
   findOneValidById,
 };

@@ -14,6 +14,7 @@ beforeAll(async () => {
 
 describe("Use case: Registration Flow (all sucessful)", () => {
   let createUserResponseBody;
+  let activationTokenId;
 
   test("Create user account", async () => {
     const response = await fetch("http://localhost:3000/api/v1/users", {
@@ -63,9 +64,10 @@ describe("Use case: Registration Flow (all sucessful)", () => {
   test("Receive activation email", async () => {
     const lastEmail = await orchestrator.getLastEmail();
 
-    const activationId = orchestrator.extractUUID(lastEmail.text);
+    activationTokenId = orchestrator.extractUUID(lastEmail.text);
 
-    const activationToken = await activation.findOneValidById(activationId);
+    const activationToken =
+      await activation.findOneValidById(activationTokenId);
 
     expect(lastEmail).toEqual({
       id: 1,
@@ -86,7 +88,26 @@ describe("Use case: Registration Flow (all sucessful)", () => {
     expect(activationToken.used_at).toBe(null);
   });
 
-  test("Active account", () => {});
+  test("Active account", async () => {
+    const responseActivation = await fetch(
+      `http://localhost:3000/api/v1/activations/${activationTokenId}`,
+      {
+        method: "PATCH",
+      },
+    );
+
+    expect(responseActivation.status).toBe(200);
+
+    const responseBodyActivation = await responseActivation.json();
+
+    expect(Date.parse(responseBodyActivation.used_at)).not.toBeNaN();
+
+    const activatedUser = await user.findOneByUsername(
+      createUserResponseBody.username,
+    );
+
+    expect(activatedUser.features).toEqual(["create:session"]);
+  });
 
   test("Login", () => {});
 
