@@ -61,10 +61,18 @@ async function createUser(userObject = {}) {
   });
 }
 
+async function createActivation(userObject) {
+  const activationToken = await activation.create(userObject.id);
+
+  return activationToken;
+}
+
 async function activateUser(userObject) {
   const activationToken = await activation.create(userObject.id);
 
   await activation.markTokenAsUsed(activationToken.id);
+
+  return await user.findOneById(userObject.id);
 }
 
 async function createSession(userId) {
@@ -107,16 +115,22 @@ function extractUUID(text) {
   return match ? match[0] : null;
 }
 
+function verifyDateDifference(date1, date2, dateDiff) {
+  return date1 - date2 + dateDiff < 1000 && date1 - date2 + dateDiff > 0;
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
   runPendingMigrations,
   createUser,
+  createActivation,
   activateUser,
   createSession,
   deleteAllEmails,
   getLastEmail,
   extractUUID,
+  verifyDateDifference,
 };
 
 export default orchestrator;
