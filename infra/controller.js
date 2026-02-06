@@ -8,6 +8,7 @@ import {
   UnauthorizedError,
   ValidationError,
 } from "infra/errors";
+import authorization from "models/authorization";
 import session from "models/session";
 import user from "models/user";
 
@@ -48,7 +49,7 @@ async function injectAnonymousOrUser(request, response, next) {
     await injectAnonymousUser(request);
   }
 
-  next();
+  await next();
 }
 
 async function injectAuthenticatedUser(request) {
@@ -76,8 +77,10 @@ async function injectAnonymousUser(request) {
 function canRequest(requiredFeature) {
   return canRequestMiddleware;
 
-  function canRequestMiddleware(request, response, next) {
-    if (!request.context?.user?.features.includes(requiredFeature)) {
+  async function canRequestMiddleware(request, response, next) {
+    const userTryingToRequest = request.context?.user;
+
+    if (!authorization.can(userTryingToRequest, requiredFeature)) {
       throw new ForbiddenError({
         message: "Você não tem permissão para realizar esta ação.",
         action:
@@ -85,7 +88,7 @@ function canRequest(requiredFeature) {
       });
     }
 
-    next();
+    await next();
   }
 }
 
