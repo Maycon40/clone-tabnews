@@ -67,12 +67,12 @@ async function createActivation(userObject) {
   return activationToken;
 }
 
-async function activateUser(userObject) {
-  const activationToken = await activation.create(userObject.id);
+async function activateUser(userId) {
+  const activationToken = await activation.create(userId);
 
   await activation.markTokenAsUsed(activationToken.id);
 
-  return await user.findOneById(userObject.id);
+  return await user.findOneById(userId);
 }
 
 async function createSession(userId) {
