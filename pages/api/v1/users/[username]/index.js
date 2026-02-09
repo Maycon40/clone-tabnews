@@ -2,6 +2,7 @@ import { createRouter } from "next-connect";
 import controller from "infra/controller";
 import user from "models/user";
 import { ForbiddenError } from "infra/errors";
+import authorization from "models/authorization";
 
 const router = createRouter();
 
@@ -22,14 +23,15 @@ async function getHandler(request, response) {
 async function patchHandler(request, response) {
   const username = request.query.username;
   const userInputValues = request.body;
+
   const currentUser = request.context.user;
+  const targetUser = await user.findOneByUsername(username);
 
-  const userToUpdate = await user.findOneByUsername(username);
-
-  if (userToUpdate.id != currentUser.id) {
+  if (!authorization.can(currentUser, "update:user", targetUser)) {
     throw new ForbiddenError({
-      message: "Você não tem permissão para alterar outros usuários.",
-      action: "Utilize seu nome de usuário para alterar as informações.",
+      message: "Você não tem permissão para alterar outro usuário.",
+      action:
+        "Verifique se você possuí a permissão para atualizar outro usuário.",
     });
   }
 

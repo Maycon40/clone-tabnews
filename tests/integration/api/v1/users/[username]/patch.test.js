@@ -311,7 +311,7 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       await orchestrator.activateUser(myUser.id);
 
-      const newSession = await orchestrator.createSession(myUser.id);
+      const myUserSession = await orchestrator.createSession(myUser.id);
 
       const response = await fetch(
         "http://localhost:3000/api/v1/users/anotherUser",
@@ -319,7 +319,7 @@ describe("PATCH /api/v1/users/[username]", () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Cookie: `session_id=${newSession.token}`,
+            Cookie: `session_id=${myUserSession.token}`,
           },
           body: JSON.stringify({
             username: "anotherUser2",
@@ -333,8 +333,89 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       expect(responseBody).toEqual({
         name: "ForbiddenError",
-        message: "Você não tem permissão para alterar outros usuários.",
-        action: "Utilize seu nome de usuário para alterar as informações.",
+        message: "Você não tem permissão para alterar outro usuário.",
+        action:
+          "Verifique se você possuí a permissão para atualizar outro usuário.",
+        status_code: 403,
+      });
+    });
+
+    test("Editing email from another user without permission", async () => {
+      const myUser = await orchestrator.createUser({
+        username: "myUserEmail",
+      });
+
+      await orchestrator.createUser({
+        username: "anotherUserEmail",
+      });
+
+      await orchestrator.activateUser(myUser.id);
+
+      const myUserSession = await orchestrator.createSession(myUser.id);
+
+      const response = await fetch(
+        "http://localhost:3000/api/v1/users/anotherUserEmail",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `session_id=${myUserSession.token}`,
+          },
+          body: JSON.stringify({
+            email: "email@gmail.com",
+          }),
+        },
+      );
+
+      expect(response.status).toBe(403);
+
+      const responseBody = await response.json();
+
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        message: "Você não tem permissão para alterar outro usuário.",
+        action:
+          "Verifique se você possuí a permissão para atualizar outro usuário.",
+        status_code: 403,
+      });
+    });
+
+    test("Editing password from another user without permission", async () => {
+      const myUser = await orchestrator.createUser({
+        username: "myUserPassword",
+      });
+
+      await orchestrator.createUser({
+        username: "anotherUserPassword",
+      });
+
+      await orchestrator.activateUser(myUser.id);
+
+      const myUserSession = await orchestrator.createSession(myUser.id);
+
+      const response = await fetch(
+        "http://localhost:3000/api/v1/users/anotherUserPassword",
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Cookie: `session_id=${myUserSession.token}`,
+          },
+          body: JSON.stringify({
+            password: "password",
+          }),
+        },
+      );
+
+      expect(response.status).toBe(403);
+
+      const responseBody = await response.json();
+
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        message: "Você não tem permissão para alterar outro usuário.",
+        action:
+          "Verifique se você possuí a permissão para atualizar outro usuário.",
         status_code: 403,
       });
     });
