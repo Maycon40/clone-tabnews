@@ -149,7 +149,6 @@ describe("Use case: Registration Flow (all sucessful)", () => {
       id: responseBody.id,
       username: createUserResponseBody.username,
       email: responseBody.email,
-      password: responseBody.password,
       features: ["create:session", "read:session", "update:user"],
       created_at: responseBody.created_at,
       updated_at: responseBody.updated_at,
