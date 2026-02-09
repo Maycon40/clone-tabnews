@@ -8,7 +8,10 @@ function can(userObject, requiredFeature, resource) {
   if (requiredFeature === "update:user" && resource) {
     authorized = false;
 
-    if (userObject.id === resource.id) {
+    if (
+      userObject.id === resource.id ||
+      can(userObject, "update:user:others")
+    ) {
       authorized = true;
     }
   }

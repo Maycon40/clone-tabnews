@@ -119,6 +119,12 @@ function verifyDateDifference(date1, date2, dateDiff) {
   return date1 - date2 + dateDiff < 1000 && date1 - date2 + dateDiff > 0;
 }
 
+async function addFeaturesToUser(userId, features) {
+  const updatedUser = await user.addFeatures(userId, features);
+
+  return updatedUser;
+}
+
 const orchestrator = {
   waitForAllServices,
   clearDatabase,
@@ -131,6 +137,7 @@ const orchestrator = {
   getLastEmail,
   extractUUID,
   verifyDateDifference,
+  addFeaturesToUser,
 };
 
 export default orchestrator;
