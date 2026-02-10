@@ -18,6 +18,8 @@ describe("POST /api/v1/sessions", () => {
         password: "correctPassword",
       });
 
+      await orchestrator.activateUser(createdUser.id);
+
       const response = await fetch("http://localhost:3000/api/v1/sessions", {
         method: "POST",
         headers: {
@@ -47,14 +49,16 @@ describe("POST /api/v1/sessions", () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
 
       const expiresAt = new Date(responseBody.expires_at);
-      expiresAt.setSeconds(0);
-      expiresAt.setMilliseconds(0);
 
       const createdAt = new Date(responseBody.created_at);
-      createdAt.setSeconds(0);
-      createdAt.setMilliseconds(0);
 
-      expect(expiresAt - createdAt).toBe(session.EXPIRATION_IN_MILLISECONDS);
+      expect(
+        orchestrator.verifyDateDifference(
+          createdAt,
+          expiresAt,
+          session.EXPIRATION_IN_MILLISECONDS,
+        ),
+      ).toBe(true);
 
       const parsedSetCookie = setCookieParser(response, {
         map: true,

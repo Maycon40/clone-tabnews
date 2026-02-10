@@ -20,15 +20,21 @@ describe("GET /api/v1/users/[username]", () => {
 
       const response2Body = await response2.json();
 
+      expect(response2Body).toEqual({
+        id: response2Body.id,
+        username: createdUser.username,
+        features: ["read:activation_token"],
+        created_at: response2Body.created_at,
+        updated_at: response2Body.updated_at,
+      });
+
       expect(uuidVersion(response2Body.id)).toBe(4);
       expect(Date.parse(response2Body.created_at)).not.toBeNaN();
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
-      expect(response2Body.username).toBe(createdUser.username);
-      expect(response2Body.email).toBe(createdUser.email);
     });
 
     test("With case mismatch", async () => {
-      const createdUser = await orchestrator.createUser({
+      await orchestrator.createUser({
         username: "differentcase",
       });
 
@@ -40,11 +46,17 @@ describe("GET /api/v1/users/[username]", () => {
 
       const response2Body = await response2.json();
 
+      expect(response2Body).toEqual({
+        id: response2Body.id,
+        username: "differentcase",
+        features: ["read:activation_token"],
+        created_at: response2Body.created_at,
+        updated_at: response2Body.updated_at,
+      });
+
       expect(uuidVersion(response2Body.id)).toBe(4);
       expect(Date.parse(response2Body.created_at)).not.toBeNaN();
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
-      expect(response2Body.username).toBe("differentcase");
-      expect(response2Body.email).toBe(createdUser.email);
     });
 
     test("With nonexistance username", async () => {

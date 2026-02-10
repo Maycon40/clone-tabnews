@@ -6,13 +6,24 @@ jobs:
   jest:
     name: Jest Ubuntu
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: "lts/krypton"
+          node-version: 20
 
-      - run: npm ci
+      - name: Install Dev Containers CLI
+        run: npm install -g @devcontainers/cli
 
-      - run: npm test
+      - name: Start Dev Container
+        run: devcontainer up --workspace-folder .
+
+      - name: Install dependencies
+        run: devcontainer exec --workspace-folder . npm ci
+
+      - name: Run tests inside Dev Container
+        run: devcontainer exec --workspace-folder . npm test

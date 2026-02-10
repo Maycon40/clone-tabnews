@@ -19,8 +19,8 @@ describe("POST /api/v1/users", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: "teste",
-          email: "teste@gmail.com",
+          username: "test",
+          email: "test@gmail.com",
           password: "senha123",
         }),
       });
@@ -29,13 +29,19 @@ describe("POST /api/v1/users", () => {
 
       const responseBody = await response.json();
 
+      expect(responseBody).toEqual({
+        id: responseBody.id,
+        username: "test",
+        features: ["read:activation_token"],
+        created_at: responseBody.created_at,
+        updated_at: responseBody.updated_at,
+      });
+
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
-      expect(responseBody.username).toBe("teste");
-      expect(responseBody.email).toBe("teste@gmail.com");
 
-      const userInDatabase = await user.findOneByUsername("teste");
+      const userInDatabase = await user.findOneByUsername("test");
       const correctPasswordMatch = await password.compare(
         "senha123",
         userInDatabase.password,
@@ -124,6 +130,41 @@ describe("POST /api/v1/users", () => {
         message: "O nome de usuário já está sendo utilizado.",
         action: "Utilize outro nome de usuário.",
         status_code: 400,
+      });
+    });
+  });
+
+  describe("Default user", () => {
+    test("Without permission", async () => {
+      const createdUser = await orchestrator.createUser();
+
+      await orchestrator.activateUser(createdUser.id);
+
+      const newSession = await orchestrator.createSession(createdUser.id);
+
+      const response = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `session_id=${newSession.token}`,
+        },
+        body: JSON.stringify({
+          username: "test",
+          email: "test@gmail.com",
+          password: "senha123",
+        }),
+      });
+
+      expect(response.status).toBe(403);
+
+      const responseBody = await response.json();
+
+      expect(responseBody).toEqual({
+        name: "ForbiddenError",
+        message: "Você não tem permissão para realizar esta ação.",
+        action:
+          "Verifique se o seu usuário possui a permissão necessária para realizar esta ação.",
+        status_code: 403,
       });
     });
   });
