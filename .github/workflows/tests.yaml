@@ -1,11 +1,10 @@
-name: Tests (Dev Container)
+name: Automated Tests
 
-on:
-  push:
-  pull_request:
+on: pull_request
 
 jobs:
-  tests:
+  jest:
+    name: Jest Ubuntu
     runs-on: ubuntu-latest
 
     steps:
@@ -21,11 +20,7 @@ jobs:
         run: npm install -g @devcontainers/cli
 
       - name: Build Dev Container
-        run: devcontainer build \
-          --workspace-folder .
+        run: devcontainer build
 
       - name: Run tests inside Dev Container
-        run: |
-          devcontainer exec \
-            --workspace-folder . \
-            npm test
+        run: devcontainer exec npm test
