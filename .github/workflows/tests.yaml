@@ -1,18 +1,31 @@
-name: Automated Tests
+name: Tests (Dev Container)
 
-on: pull_request
+on:
+  push:
+  pull_request:
 
 jobs:
-  jest:
-    name: Jest Ubuntu
+  tests:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: "lts/krypton"
+          node-version: 20
 
-      - run: npm ci
+      - name: Install Dev Containers CLI
+        run: npm install -g @devcontainers/cli
 
-      - run: npm test
+      - name: Build Dev Container
+        run: devcontainer build \
+          --workspace-folder .
+
+      - name: Run tests inside Dev Container
+        run: |
+          devcontainer exec \
+            --workspace-folder . \
+            npm test
