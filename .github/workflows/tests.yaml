@@ -23,4 +23,4 @@ jobs:
         run: devcontainer build
 
       - name: Run tests inside Dev Container
-        run: devcontainer exec npm test
+        run: devcontainer exec --workspace-folder . npm test
