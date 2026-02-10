@@ -19,8 +19,8 @@ jobs:
       - name: Install Dev Containers CLI
         run: npm install -g @devcontainers/cli
 
-      - name: Build Dev Container
-        run: devcontainer build
+      - name: Start Dev Container
+        run: devcontainer up --workspace-folder .
 
       - name: Run tests inside Dev Container
         run: devcontainer exec --workspace-folder . npm test
