@@ -22,5 +22,8 @@ jobs:
       - name: Start Dev Container
         run: devcontainer up --workspace-folder .
 
+      - name: Install dependencies
+        run: devcontainer exec --workspace-folder . npm ci
+
       - name: Run tests inside Dev Container
         run: devcontainer exec --workspace-folder . npm test
