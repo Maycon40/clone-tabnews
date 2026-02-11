@@ -11,7 +11,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "lts/krypton"
+          node-version-file: "package.json"
 
       - run: npm ci
 
@@ -29,7 +29,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "lts/krypton"
+          node-version-file: "package.json"
 
       - run: npm ci
 

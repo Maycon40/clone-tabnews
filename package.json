@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Implementação do https://www.tabnews.com.br para o https://curso.dev",
   "main": "index.js",
+  "engines": {
+    "node": "24"
+  },
   "scripts": {
     "dev": "npm run services:wait:database && npm run migrations:up && next dev",
     "test": "concurrently -n next,jest  -k -s command-jest \"next dev --webpack\" \"jest --runInBand\"",
