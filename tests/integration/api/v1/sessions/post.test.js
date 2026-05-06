@@ -12,7 +12,7 @@ beforeAll(async () => {
 
 describe("POST /api/v1/sessions", () => {
   describe("Anonymous user", () => {
-    test("With correct 'email' and 'password'", async () => {
+    test("With correct `email` and `password`", async () => {
       const createdUser = await orchestrator.createUser({
         email: "correctEmail@gmail.com",
         password: "correctPassword",
@@ -73,7 +73,7 @@ describe("POST /api/v1/sessions", () => {
       });
     });
 
-    test("With incorrect 'email', but correct 'password'", async () => {
+    test("With incorrect `email`, but correct `password`", async () => {
       await orchestrator.createUser({
         password: "senha123",
       });
@@ -101,7 +101,7 @@ describe("POST /api/v1/sessions", () => {
       });
     });
 
-    test("With correct 'email', but incorrect 'password'", async () => {
+    test("With correct `email`, but incorrect `password`", async () => {
       await orchestrator.createUser({
         email: "wrongPassword@gmail.com",
       });
@@ -129,7 +129,7 @@ describe("POST /api/v1/sessions", () => {
       });
     });
 
-    test("With incorrect 'email' and incorrect 'password'", async () => {
+    test("With incorrect `email` and incorrect `password`", async () => {
       await orchestrator.createUser();
 
       const response = await fetch("http://localhost:3000/api/v1/sessions", {
