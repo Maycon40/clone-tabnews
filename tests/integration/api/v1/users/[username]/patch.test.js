@@ -62,7 +62,7 @@ describe("PATCH /api/v1/users/[username]", () => {
   });
 
   describe("Default user", () => {
-    test("With unique 'username'", async () => {
+    test("With unique `username`", async () => {
       const createdUser = await orchestrator.createUser({
         username: "uniqueUser",
       });
@@ -104,7 +104,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
     });
 
-    test("With unique 'email'", async () => {
+    test("With unique `email`", async () => {
       const createdUser = await orchestrator.createUser({
         username: "uniqueEmail",
         email: "uniqueEmail@gmail.com",
@@ -146,9 +146,13 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
 
       expect(responseBody.updated_at > responseBody.created_at).toBe(true);
+
+      const userInDatabase = await user.findOneByUsername(createdUser.username);
+
+      expect(userInDatabase.email).toBe("uniqueEmail2@gmail.com");
     });
 
-    test("With new 'password'", async () => {
+    test("With new `password`", async () => {
       const createdUser = await orchestrator.createUser({
         username: "newPassword",
         email: "newPassword@gmail.com",
@@ -205,7 +209,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(incorrectPasswordMatch).toBe(false);
     });
 
-    test("With nonexistance 'username'", async () => {
+    test("With nonexistance `username`", async () => {
       const createdUser = await orchestrator.createUser();
 
       await orchestrator.activateUser(createdUser.id);
@@ -238,7 +242,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       });
     });
 
-    test("With duplicated 'username'", async () => {
+    test("With duplicated `username`", async () => {
       const createdUser = await orchestrator.createUser({
         username: "user1",
       });
@@ -290,7 +294,7 @@ describe("PATCH /api/v1/users/[username]", () => {
       expect(response2.status).toBe(200);
     });
 
-    test("With duplicated 'email'", async () => {
+    test("With duplicated `email`", async () => {
       const createdUser = await orchestrator.createUser({
         email: "email1@gmail.com",
       });

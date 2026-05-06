@@ -11,7 +11,7 @@ beforeAll(async () => {
   await orchestrator.deleteAllEmails();
 });
 
-describe("PATCH /api/v1/sessions", () => {
+describe("PATCH /api/v1/activations/[token_id]", () => {
   let createdUser;
   let activationId;
 
